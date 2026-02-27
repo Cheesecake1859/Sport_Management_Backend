@@ -25,7 +25,11 @@ const app = express();
 // ==========================================
 // 2. MIDDLEWARE & STATIC FILES
 // ==========================================
-app.use(cors());
+app.use(cors({
+  origin: '*', 
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Serve uploaded files (Sports Images and Slips)
@@ -153,12 +157,12 @@ app.get('/api/sportstypes', async (req, res) => {
 
 app.get('/api/sports', async (req, res) => {
   try {
-    // Merged your two routes: Populates the type AND safely handles empty arrays
-    const sports = await Sports.find().populate('Sports_type_ID');
+    // CHANGE THIS LINE: Remove .populate('Sports_type_ID')
+    const sports = await Sports.find(); 
     res.status(200).json(Array.isArray(sports) ? sports : []); 
   } catch (error) {
     console.error("Backend Error fetching sports:", error);
-    res.status(500).json([]); // Send empty array so .map() doesn't break
+    res.status(500).json([]); 
   }
 });
 
